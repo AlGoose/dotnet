@@ -1,0 +1,78 @@
+﻿@model WebTavern.Models.ViewModels.IndexViewModel
+
+@{
+    ViewBag.Title = "Напитки";
+}
+
+@{
+    IEnumerable<WebTavern.Models.EFModels.Drink> drinks = Model.Drinks;
+}
+
+
+<h2>Напитки</h2>
+
+<form method="get">
+    <div class="form-inline form-group">
+        <label class="control-label"> Поиск: </label>
+        @Html.TextBox("name", null, htmlAttributes: new { @class = "form-control" })
+
+        <label class="control-label"> Рейтинг: </label>
+
+        @Html.DropDownList("sign", ViewBag.SignsList as SelectList, htmlAttributes: new { @class = "form-control", style = "width:100px" })
+
+        @Html.TextBox("rating", null, htmlAttributes: new { @class = "form-control", style = "width:100px" })
+
+        <input type="submit" value="Фильтр" class="btn btn-default" />
+    </div>
+</form>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayName("Название: ")
+        </th>
+        <th>
+            @Html.DisplayName("Рейтинг: ")
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in drinks) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.Name)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Rating)
+        </td>
+        <td>
+            @Html.ActionLink("Edit", "Edit", new { id = item.Id }) |
+            @Html.ActionLink("Details", "Details", new { id = item.Id }) |
+            @Html.ActionLink("Delete", "Delete", new { id = item.Id })
+        </td>
+    </tr>
+}
+
+</table>
+
+@if (Model.PageViewModel.HasPreviousPage)
+{
+    <a asp-action="Index"
+       href="@Url.Action("Index","Drink", new {page = Model.PageViewModel.PageNumber - 1})"
+       class="btn btn-default btn">
+        <i class="glyphicon glyphicon-chevron-left"></i>
+        Назад
+    </a>
+}
+@if (Model.PageViewModel.HasNextPage)
+{
+    <a asp-action="Index"
+       href="@Url.Action("Index","Drink", new {page = Model.PageViewModel.PageNumber + 1})"
+       class="btn btn-default btn">
+    Вперед
+        <i class="glyphicon glyphicon-chevron-right"></i>
+        </a>
+}

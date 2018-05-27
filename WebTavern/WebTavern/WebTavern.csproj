@@ -159,10 +159,8 @@
     <Compile Include="Controllers\DrinkController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\IngredientController.cs" />
-    <Compile Include="Controllers\InquiryController.cs" />
     <Compile Include="Controllers\RatingController.cs" />
     <Compile Include="Controllers\RecipeController.cs" />
-    <Compile Include="Controllers\SecondInquiryController.cs" />
     <Compile Include="Controllers\TypeAttributeController.cs" />
     <Compile Include="Controllers\TypeController.cs" />
     <Compile Include="Global.asax.cs">
@@ -327,7 +325,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Views\SecondInquiry\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

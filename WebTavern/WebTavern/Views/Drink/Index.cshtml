@@ -10,7 +10,9 @@
 
 
 <h2>Напитки</h2>
-
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
 <form method="get">
     <div class="form-inline form-group">
         <label class="control-label"> Поиск: </label>
@@ -22,57 +24,83 @@
 
         @Html.TextBox("rating", null, htmlAttributes: new { @class = "form-control", style = "width:100px" })
 
-        <input type="submit" value="Фильтр" class="btn btn-default" />
+        <input @Url.Action("Index", "Drink") type="submit" value="Поиск" class="btn btn-default" />
+    </div>
+    
+    <div class="left">
+        <div>
+            <label class="control-label"> Поиск по содержимому: </label>
+            @Html.TextBox("ingredientName", null, htmlAttributes: new { @class = "form-control" })
+        </div>
+        
+        <div>
+            <label class="control-label"> Поиск по атрибуту: </label>
+            @Html.TextBox("attributeName", null, htmlAttributes: new { @class = "form-control" })
+        </div>
     </div>
 </form>
 
-<p>
-    @Html.ActionLink("Create New", "Create")
-</p>
-<table class="table">
-    <tr>
-        <th>
-            @Html.DisplayName("Название: ")
-        </th>
-        <th>
-            @Html.DisplayName("Рейтинг: ")
-        </th>
-        <th></th>
-    </tr>
+<style type="text/css">
+    .left {
+        float: left;
+        width: 28%;
+    }
 
-@foreach (var item in drinks) {
-    <tr>
-        <td>
-            @Html.DisplayFor(modelItem => item.Name)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Rating)
-        </td>
-        <td>
-            @Html.ActionLink("Edit", "Edit", new { id = item.Id }) |
-            @Html.ActionLink("Details", "Details", new { id = item.Id }) |
-            @Html.ActionLink("Delete", "Delete", new { id = item.Id })
-        </td>
-    </tr>
-}
+    .right {
+        width: 70%;
+        float: right;
+        border-left: 1px solid #ddd;
+    }
+</style>
 
-</table>
+<div class="right">
+    
+    <table class="table">
+        <tr>
+            <th>
+                @Html.DisplayName("Название: ")
+            </th>
+            <th>
+                @Html.DisplayName("Рейтинг: ")
+            </th>
+            <th></th>
+        </tr>
 
-@if (Model.PageViewModel.HasPreviousPage)
-{
-    <a asp-action="Index"
-       href="@Url.Action("Index","Drink", new {page = Model.PageViewModel.PageNumber - 1})"
-       class="btn btn-default btn">
-        <i class="glyphicon glyphicon-chevron-left"></i>
-        Назад
-    </a>
-}
-@if (Model.PageViewModel.HasNextPage)
-{
-    <a asp-action="Index"
-       href="@Url.Action("Index","Drink", new {page = Model.PageViewModel.PageNumber + 1})"
-       class="btn btn-default btn">
-    Вперед
-        <i class="glyphicon glyphicon-chevron-right"></i>
+        @foreach (var item in drinks)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Rating)
+                </td>
+                <td>
+                    @Html.ActionLink("Edit", "Edit", new { id = item.Id }) |
+                    @Html.ActionLink("Details", "Details", new { id = item.Id }) |
+                    @Html.ActionLink("Delete", "Delete", new { id = item.Id })
+                </td>
+            </tr>
+        }
+
+    </table>
+
+    @if (Model.PageViewModel.HasPreviousPage)
+    {
+        <a asp-action="Index"
+           href="@Url.Action("Index","Drink", new {page = Model.PageViewModel.PageNumber - 1})"
+           class="btn btn-default btn">
+            <i class="glyphicon glyphicon-chevron-left"></i>
+            Назад
         </a>
-}
+    }
+    @if (Model.PageViewModel.HasNextPage)
+    {
+        <a asp-action="Index"
+           href="@Url.Action("Index","Drink", new {page = Model.PageViewModel.PageNumber + 1})"
+           class="btn btn-default btn">
+            Вперед
+            <i class="glyphicon glyphicon-chevron-right"></i>
+        </a>
+    }
+</div>

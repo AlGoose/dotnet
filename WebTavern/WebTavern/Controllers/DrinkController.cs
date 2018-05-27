@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data.Entity;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -18,9 +17,51 @@ namespace WebTavern.Controllers
         private TavernContext db = new TavernContext();
 
         // GET: Drink
-        public async Task<ActionResult> Index(double? rating, string sign, string name, int page = 1)
+        public async Task<ActionResult> Index(double? rating, string sign, string name, string ingredientName, string attributeName, int page = 1)
         {
             IQueryable<Drink> drinks = db.Drinks;
+
+
+            if (!String.IsNullOrEmpty(ingredientName))
+            {
+                var bingo = (
+                    from o in drinks
+                    join d in db.Recipes on o.Id equals d.DrinkId
+                    where d.Ingredient.Name == ingredientName
+                    select o
+                ).ToList();
+
+                if (!String.IsNullOrEmpty(attributeName))
+                {
+                    bingo = (
+                        from o in drinks
+                        join d in db.Recipes on o.Id equals d.DrinkId
+                        join f in db.AttributeValues on d.IngredientId equals f.IngredientId
+                        join s in db.Attributes on f.AttributeId equals s.Id
+                        where s.Name == attributeName
+                        select o
+                    ).ToList();
+
+                }
+                drinks = bingo.AsQueryable();
+            }
+            else
+            {
+                if (!String.IsNullOrEmpty(attributeName))
+                {
+                    var bingo = (
+                        from o in drinks
+                        join d in db.Recipes on o.Id equals d.DrinkId
+                        join f in db.AttributeValues on d.IngredientId equals f.IngredientId
+                        join s in db.Attributes on f.AttributeId equals s.Id
+                        where s.Name == attributeName
+                        select o
+                    ).ToList();
+
+                    drinks = bingo.AsQueryable();
+                }
+            }
+
             string[] signs = { "=", ">", "<", ">=", "<=" };
             SelectList signsList = new SelectList(signs);
             ViewBag.SignsList = signsList;
@@ -55,9 +96,9 @@ namespace WebTavern.Controllers
 
             int pageSize = 10;   // количество элементов на странице
             
-            var count = await drinks.CountAsync();
+            var count = drinks.Count();
             drinks = drinks.OrderBy(p => p.Name);
-            var items = await drinks.Skip((page - 1) * pageSize).Take(pageSize).ToListAsync();
+            var items = drinks.Skip((page - 1) * pageSize).Take(pageSize).ToList();
 
             PageViewModel pageViewModel = new PageViewModel(count, page, pageSize);
             IndexViewModel viewModel = new IndexViewModel
